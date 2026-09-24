@@ -1,40 +1,48 @@
 # Data Dictionary - Track 2: International BA Labor Market
 
-This document defines the fields, data types, and processing rules for all datasets in this project.
-**Version**: v1.0 (Pilot Stage)
-**Last Updated**: 2026-09-XX
+**Version**: v1.1 (Pilot Stage - Updated with real data)
+**Last Updated**: 2026-09-24
 **Owner**: Member B (Data Cleaning & Repository Lead)
 
-## 1. Raw Data Fields
+## 1. Raw Data Fields (100 Records)
 
 | Column Name | Type | Description | Example | Missing Value Rule |
 | :--- | :--- | :--- | :--- | :--- |
-| `job_id` | String | Unique identifier (e.g., hash of URL or auto-increment) | `a1b2c3d4` | Not allowed. If missing, regenerate. |
-| `job_title` | String | Job title | `Business Analyst` | Not allowed. Drop record if missing. |
-| `company` | String | Company name | `Google` | Fill with `Unknown` |
-| `industry` | String | Industry classification | `Technology` | Fill with `Unknown` |
-| `city` | String | City of the job | `London` | Fill with `Unknown` |
-| `country` | String | Country | `UK` | Infer from city, or fill `Unknown` |
-| `salary_min` | Float | Minimum annual salary | `50000.0` | Keep as NaN if missing |
-| `salary_max` | Float | Maximum annual salary | `80000.0` | Keep as NaN if missing |
-| `salary_currency` | String | Salary currency | `GBP` | Fill with `Unknown` |
-| `salary_is_predicted` | Boolean | Whether salary is model-predicted (Adzuna API) | `True` / `False` | Default to `False` |
-| `experience` | String | Experience requirement | `2+ years` | Fill with `Not Specified` |
-| `education` | String | Education requirement | `Bachelor's` | Fill with `Not Specified` |
-| `jd_text` | Text | Full job description | `We are looking for...` | Not allowed. Drop record if missing. |
-| `date_posted` | Date | Date posted (YYYY-MM-DD) | `2026-09-01` | Fill with collection date |
-| `url` | String | Original job posting URL | `https://...` | Not allowed. Drop record if missing. |
-| `source` | String | Data source platform | `LinkedIn` / `Adzuna` | Not allowed. |
+| `Job_id` | String | Unique identifier | `BA0001` | Not allowed |
+| `Country` | String | Country of the job | `United States` | Fill with `Unknown` |
+| `City` | String | City of the job | `Atlanta, GA` | Fill with `Unknown` |
+| `Job_Title` | String | Job title | `Staff Business Analyst` | Not allowed |
+| `Company_Name` | String | Company name | `TriNet` | Fill with `Unknown` |
+| `Industry` | String | Industry classification | `Technology` | Fill with `Unknown` |
+| `Source` | String | Data source platform | `LinkedIn` | Not allowed |
+| `Job_Url` | String | Original job posting URL | `https://...` | Not allowed |
+| `Date_Posted` | Date | Date posted (YYYY-MM-DD) | `2026-07-16` | Fill with collection date |
+| `Date_Collected` | Date | Date collected (YYYY-MM-DD) | `2026-09-15` | Not allowed |
+| `Salary_Min` | Float | Minimum annual salary | `89600` | Keep as NaN if missing |
+| `Salary_Max` | Float | Maximum annual salary | `179200` | Keep as NaN if missing |
+| `Salary_Currency` | String | Salary currency | `USD` / `GBP` | Fill with `Unknown` |
+| `Experience_Min` | Float | Minimum years of experience | `8` | Fill with `Not Specified` |
+| `Experience_Max` | Float | Maximum years of experience | `10` | Fill with `Not Specified` |
+| `Education` | String | Education requirement | `Bachelor's` | Fill with `Not Specified` |
+| `Excel` | Boolean | Requires Excel (0/1) | `1` | Fill with `0` |
+| `SQL` | Boolean | Requires SQL (0/1) | `1` | Fill with `0` |
+| `Python` | Boolean | Requires Python (0/1) | `0` | Fill with `0` |
+| `R` | Boolean | Requires R (0/1) | `0` | Fill with `0` |
+| `Tableau` | Boolean | Requires Tableau (0/1) | `1` | Fill with `0` |
+| `Power_BI` | Boolean | Requires Power BI (0/1) | `0` | Fill with `0` |
+| `AI_tools` | Boolean | Mentions AI tools (0/1) | `1` | Fill with `0` |
+| `JD_text` | Text | Full job description | `TriNet is a leading...` | Not allowed |
+| `Collector` | String | Initials of data collector | `A` | Not allowed |
 
-## 2. Cleaning Rules
-
-1. **Deduplication**: Deduplicate based on `url` or `job_title` + `company`.
-2. **Missing Values**: Follow the "Missing Value Rule" column strictly.
-3. **Encoding**: 
-   - Convert `salary_is_predicted` to 0/1 boolean.
-   - Convert `date_posted` to standard datetime format.
-4. **Text Cleaning**: Remove HTML tags, extra spaces, and newlines from `jd_text`.
+## 2. Cleaning Rules Applied
+1. **Deduplication**: Removed duplicates based on `Job_Url` (0 duplicates found in pilot).
+2. **Missing Values**: 
+   - `Education`, `Industry`, `Experience_Min`, `Experience_Max` filled with `'Not Specified'` or `'Unknown'`.
+   - `Salary_Min` and `Salary_Max` kept as `NaN` (not zero) to avoid skewing averages.
+3. **Skill Encoding**: Ensured all skill columns (`Excel`, `SQL`, etc.) are strictly 0 or 1.
+4. **Date Formatting**: Converted `Date_Posted` and `Date_Collected` to datetime objects.
 
 ## 3. Known Biases
-- Platform bias: LinkedIn and Adzuna samples may have industry or regional biases.
-- Salary bias: Adzuna's predicted salaries (`salary_is_predicted=True`) may differ from actual salaries and should be flagged separately in analysis.
+- **Platform Bias**: Only LinkedIn data from the US, UK, Singapore, and Hong Kong.
+- **Salary Bias**: 66% of records have missing salary data (only 33/100 have `Salary_Min`). This may bias salary analysis.
+- **AI Tools Bias**: Only 12% of postings explicitly mention AI tools; this may underrepresent actual AI usage.
