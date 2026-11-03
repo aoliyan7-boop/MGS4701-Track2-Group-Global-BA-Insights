@@ -46,3 +46,6 @@
 - **Platform Bias**: Only LinkedIn data from the US, UK, Singapore, and Hong Kong.
 - **Salary Bias**: 66% of records have missing salary data (only 33/100 have `Salary_Min`). This may bias salary analysis.
 - **AI Tools Bias**: Only 12% of postings explicitly mention AI tools; this may underrepresent actual AI usage.
+
+| `ai_skill_explicit` | Boolean | Indicates if AI skills are explicitly mentioned (0=No, 1=Yes) | `1` | Fill with `0` |
+| `ai_skill_level` | Integer | Intensity of AI mention (0=No mention, 2=Preferred, 3=Required) | `3` | Fill with `0` |
