@@ -33,6 +33,8 @@
 | `AI_tools` | Boolean | Mentions AI tools (0/1) | `1` | Fill with `0` |
 | `JD_text` | Text | Full job description | `TriNet is a leading...` | Not allowed |
 | `Collector` | String | Initials of data collector | `A` | Not allowed |
+| `ai_skill_explicit` | Boolean | Indicates if AI skills are explicitly mentioned (0=No, 1=Yes) | `1` | Fill with `0` |
+| `ai_skill_level` | Integer | Intensity of AI mention (0=No mention, 2=Preferred, 3=Required) | `3` | Fill with `0` |
 
 ## 2. Cleaning Rules Applied
 1. **Deduplication**: Removed duplicates based on `Job_Url` (0 duplicates found in pilot).
